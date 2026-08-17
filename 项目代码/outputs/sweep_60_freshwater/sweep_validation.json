@@ -1,0 +1,9 @@
+{
+  "expected_case_count": 60,
+  "completed_case_count": 60,
+  "unique_case_count": 60,
+  "all_constraints_passed": false,
+  "failed_case_ids": [
+    "VA_0p30_H_0p30_R_0p90"
+  ]
+}
