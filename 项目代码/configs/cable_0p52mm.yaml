@@ -1,0 +1,106 @@
+# ============================================================
+# 0.52 mm 水下柔性光缆（工程级配置）
+# 数据来源说明：
+# - 直径 / 线密度：厂家规格书（标称 0.52 mm / 0.21 g/m）
+# - EA / EI：当前为待厂家或整缆试验替换的 provisional 参数，禁止当作认证值
+# - 水动力系数：Morison + 细长体理论（CD=1.2, CA=1.0）
+# - 最小弯曲半径：任务书给出的动态 15D、低载 10D 工程参考
+# - 最低破断力：任务书给出 500 N；允许张力按安全系数 3 计算
+# ============================================================
+
+metadata:
+  parameter_status: provisional
+  diameter_density_source: MGC-01-1.0-ETFE水下柔性光缆铺放仿真任务书.docx
+  bend_reference: https://www.foa.org/tech/ref/install/bend_radius.html
+  tension_reference: https://www.tec.gov.in/pdf/GRFN/TEC-GR-TX-OFC-016-01-JUL-05.pdf
+
+case:
+  case_id: cable_0p52mm_demo
+  v_A: 0.20
+  h_A: 0.50
+  v_out: 0.21
+  t_end: 12.0
+  dt: 0.00025
+  ramp_time: 2.0
+  initial_extra_length: 0.02
+  outlet_angle_deg: 37.5
+  enforce_outlet_direction: true
+
+cable:
+  diameter: 0.00052            # [m]  0.52 mm
+  line_density: 0.00021
+  EA: 800.0                     # [N] 聚合物微缆保守估计
+  EI: 2.0e-7                    # [N·m] 细径缆典型值
+  ds: 0.01                      # [m] 任务书要求的整体粗网格
+  axial_damping: 0.020           # [N*s] 抑制轴向高频数值振动；原始峰值仍保留
+  bending_damping_time: 0.01     # [s] Kelvin-Voigt 弯曲内耗时间常数
+  compression_stiffness_ratio: 0.10 # 1 mm 网格稳定性对照得到的最低可行正则
+  payout_buffer_segments: 8
+  gravity: 9.80665
+  added_mass_coefficient: 1.0    # 细长截面保守值
+
+water:
+  water_density: 1000.0          # [kg/m³] 任务书指定水池淡水
+  drag_coefficient: 1.2          # 法向阻力系数（需标定）
+  tangential_drag_coefficient: 0.01
+  current_velocity_x: 0.0        # [m/s] 均匀流（+同航向/-逆航向）
+  current_velocity_z: 0.0
+
+seabed:
+  seabed_type: flat
+  seabed_level: 0.0
+  seabed_amplitude: 0.0
+  seabed_wavelength: 1.0
+  seabed_center: 0.0
+  seabed_width: 1.0
+  seabed_friction: 0.45          # 尼龙/聚合物缆对砂质海床典型值
+  seabed_stiffness: 800000.0      # [N/m^2] distributed penalty stiffness
+  seabed_damping: 0.02            # [N*s/m^2] distributed contact damping
+  friction_smoothing_velocity: 0.005
+  contact_force_tolerance: 1.0e-6
+  contact_gap_tolerance: 1.0e-4
+  penetration_limit: 0.001       # ~2D，工程合理
+
+safety:
+  break_force: 500.0             # [N] 任务书给出的最低破断力
+  safety_factor: 3.0
+  allowable_tension: 166.6666666667
+  min_bend_radius: 0.0078        # [m] 15D（动态安装）
+  slack_tension: 1.0e-4
+  active_velocity_tolerance: 1.0e-3
+  steady_fraction: 0.30
+
+numerical:
+  auto_substep: true
+  stability_factor: 0.1
+  max_internal_substeps: 2000
+  minimum_segment_length: 1.0e-6
+  curvature_tolerance: 1.0e-6
+  minimum_resolved_segment_ratio: 0.90
+  remesh_enabled: true
+  remesh_trigger_ratio: 0.90
+  diagnostic_zone_length: 0.05
+  relaxation_time: 0.30
+  relaxation_damping: 6.0
+  fail_on_break: false
+  fail_on_penetration: false
+
+output:
+  output_root: outputs
+  snapshot_interval: 0.10
+  save_history: true
+  save_plots: true
+  save_snapshots: true
+  tension_filter_window: 0.50
+  maximum_insertion_tension_jump: 0.001
+  maximum_reported_tension_step: 0.0001
+
+# 收敛分析：10/5/2/1 mm，时间步按空间尺度同步减小
+convergence:
+  ds_values: [0.01, 0.005, 0.002, 0.001]
+  dt_values: [0.00025, 0.000125, 0.00005, 0.000025]
+
+experiments:
+  current_velocity_x_values: [-0.20, -0.10, 0.0, 0.10, 0.20]
+  line_density_values: [0.00018, 0.00021, 0.00024]
+  water_density_values: [1000.0, 1025.0]

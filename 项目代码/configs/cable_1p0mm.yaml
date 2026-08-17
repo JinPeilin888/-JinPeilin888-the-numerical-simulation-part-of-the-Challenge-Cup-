@@ -1,0 +1,100 @@
+# ============================================================
+# 1.0 mm 水下柔性光缆（工程级配置）
+# 数据来源说明：
+# - 直径 / 线密度：典型 1.0 mm 微缆规格
+# - EA / EI：截面增大后刚度显著上升（经验/厂家数据）
+# - 水动力系数：同量级缆通用
+# - 最小弯曲半径：按任务书采用动态 15D = 15 mm，低载参考 10D = 10 mm
+# ============================================================
+
+metadata:
+  parameter_status: provisional_except_task_book_values
+  bend_reference: https://www.foa.org/tech/ref/install/bend_radius.html
+
+case:
+  case_id: cable_1p0mm_demo
+  v_A: 0.20
+  h_A: 0.50
+  v_out: 0.20
+  t_end: 12.0
+  dt: 0.00025
+  ramp_time: 2.0
+  initial_extra_length: 0.02
+  outlet_angle_deg: 37.5
+  enforce_outlet_direction: true
+
+cable:
+  diameter: 0.0010             # [m]  1.0 mm
+  line_density: 0.00110         # [kg/m] 1.1 g/m
+  EA: 2000.0                    # [N] 1.0 mm 缆典型值
+  EI: 2.0e-5                    # [N·m] 比 0.52 mm 缆大两个量级
+  ds: 0.01
+  axial_damping: 0.020
+  bending_damping_time: 0.01
+  compression_stiffness_ratio: 0.10
+  payout_buffer_segments: 8
+  gravity: 9.80665
+  added_mass_coefficient: 1.0
+
+water:
+  water_density: 1000.0          # [kg/m³] 任务书指定水池淡水
+  drag_coefficient: 1.2
+  tangential_drag_coefficient: 0.01
+  current_velocity_x: 0.0
+  current_velocity_z: 0.0
+
+seabed:
+  seabed_type: flat
+  seabed_level: 0.0
+  seabed_amplitude: 0.0
+  seabed_wavelength: 1.0
+  seabed_center: 0.0
+  seabed_width: 1.0
+  seabed_friction: 0.45
+  seabed_stiffness: 800000.0     # [N/m^2] distributed penalty stiffness
+  seabed_damping: 0.02           # [N*s/m^2] distributed contact damping
+  friction_smoothing_velocity: 0.005
+  contact_force_tolerance: 1.0e-6
+  contact_gap_tolerance: 1.0e-4
+  penetration_limit: 0.001
+
+safety:
+  break_force: 500.0
+  safety_factor: 3.0
+  allowable_tension: 166.6666666667
+  min_bend_radius: 0.015         # [m] 15D 动态/安装参考
+  slack_tension: 1.0e-4
+  active_velocity_tolerance: 1.0e-3
+  steady_fraction: 0.30
+
+numerical:
+  auto_substep: true
+  stability_factor: 0.1
+  max_internal_substeps: 2000
+  minimum_segment_length: 1.0e-6
+  curvature_tolerance: 1.0e-6
+  minimum_resolved_segment_ratio: 0.90
+  remesh_enabled: true
+  remesh_trigger_ratio: 0.90
+  diagnostic_zone_length: 0.05
+  relaxation_time: 0.30
+  relaxation_damping: 6.0
+  fail_on_break: false
+  fail_on_penetration: false
+
+output:
+  output_root: outputs
+  snapshot_interval: 0.10
+  save_history: true
+  save_plots: true
+  save_snapshots: true
+  tension_filter_window: 0.50
+  maximum_insertion_tension_jump: 0.001
+  maximum_reported_tension_step: 0.0001
+
+convergence:
+  ds_values: [0.01, 0.005, 0.002, 0.001]
+  dt_values: [0.00025, 0.000125, 0.00005, 0.000025]
+
+experiments:
+  current_velocity_x_values: [-0.20, -0.10, 0.0, 0.10, 0.20]

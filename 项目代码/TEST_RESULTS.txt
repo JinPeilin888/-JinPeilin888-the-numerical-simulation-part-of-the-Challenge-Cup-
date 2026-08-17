@@ -1,0 +1,40 @@
+Validation date: 2026-08-16
+Status: INTERIM — 18 of 60 formal 12 s cases completed
+
+1. Unit tests
+Command: .venv/bin/python -m pytest -q
+Result: 46 passed, 0 failed
+
+2. Formal 60-case matrix progress
+Command: .venv/bin/python scripts/run_sweep.py --workers 8 --resume --output-root outputs/sweep_60_freshwater
+Completed: 18 unique cases, each t_end=12 s
+Pending: 42 cases
+Completed-case gates: 18/18 passed all eight required gates
+Important: this is not a full 60-case acceptance result.
+
+3. Worst completed formal-case values
+Raw peak active tension: 0.008026192725 N < 166.666666667 N working limit and < 500 N MBL
+Minimum bend radius: 0.038744233180 m > 0.0078 m (15D)
+Maximum length-conservation error: 1.810995798e-12 m < 1e-9 m
+Maximum outlet direction error: 0 deg < 1e-6 deg
+Maximum seabed penetration: 0 m < 0.001 m
+Minimum standard segment ratio: 0.9998682361 > 0.90
+Maximum instantaneous insertion tension jump: 0 N < 0.001 N
+Maximum adjacent step of reported 0.5 s trend: 1.015861782e-6 N < 0.0001 N
+
+4. Grid/insertion/current experiments
+10/5/2/1 mm grid and time-step convergence: passed
+Fine-grid bend-radius relative difference: 0.01465999708 < 0.10
+Insertion rest-length error: 1.110223025e-16 m
+Five current cases (-0.2 to +0.2 m/s): 5/5 passed current gates
+
+5. Animation audit
+Size/frames/time: 800x450, 161 frames, 0-8 s
+Anchor drift/AUV error/outlet error/penetration/self-intersections: 0
+Maximum frame displacement: 0.01021164558 m < 0.04 m
+Result: passed; keyframes visually inspected
+
+6. Resume behavior
+The --resume option reuses a case only when both summary.json and
+resolved_config.json exist and the resolved configuration exactly matches.
+Interrupted/incomplete cases are recomputed automatically.

@@ -1,0 +1,125 @@
+schema_version: 1
+status: READY
+model_name: "0.52 mm / 1.0 mm 水下柔性光缆二维动态铺放修订模型"
+model_type: simulation
+source_priority:
+  - "本轮用户要求（按顺序修改、实验验证并满足全部约束）"
+  - "MGC-01-1.0-ETFE水下柔性光缆铺放仿真任务书.docx"
+  - "现有项目代码与 README"
+  - "旧计划书 docs/鎬濊矾鏂囦欢.md"
+source_files:
+  - path: "/Users/gerrilynn/Desktop/CUMCM/金沛霖—仿真任务/MGC-01-1.0-ETFE水下柔性光缆铺放仿真任务书.docx"
+    role: "任务书与验收约束来源"
+questions:
+  - id: q1
+    objective: "建立可追溯的 0.52 mm 与 1.0 mm 独立参数配置，并计算淡水/海水和线密度公差的浮力状态。"
+    inputs: ["缆径", "线密度及公差", "EA", "EI", "CD", "CA", "允许张力"]
+    outputs: ["results/buoyancy_matrix.csv", "results/parameter_audit.json"]
+  - id: q2
+    objective: "验证 37.5°持续出口约束、能量型弯曲力、毫米级网格和分区弯曲半径。"
+    inputs: ["动态模型", "ds=10/5/2/1 mm", "同步时间步"]
+    outputs: ["results/convergence_results.csv", "results/bending_validation.csv"]
+  - id: q3
+    objective: "验证动态放缆的长度/质量/浮力守恒、插入连续性和重划分过程不制造伪峰值。"
+    inputs: ["节点状态", "放缆速度", "目标单元长度"]
+    outputs: ["results/insertion_audit.csv", "results/metrics.json"]
+  - id: q4
+    objective: "完成 U=-0.20,-0.10,0,+0.10,+0.20 m/s 的代表工况均匀流实验。"
+    inputs: ["五档水平流速", "相对水体速度阻力"]
+    outputs: ["results/current_sweep.csv", "figures/result_q4_current_response.svg", "figures/result_q4_current_response.png"]
+  - id: q5
+    objective: "生成并多帧验收物理合理的最终动态图。"
+    inputs: ["通过全部约束检查的节点快照"]
+    outputs:
+      - "results/animation_audit.json"
+      - "outputs/final_validation/demo_animation.gif"
+data_mapping: []
+variables:
+  - {symbol: "r_i", code_name: position, meaning: "二维节点坐标", unit: m, shape: "N x 2"}
+  - {symbol: "v_i", code_name: velocity, meaning: "二维节点速度", unit: "m/s", shape: "N x 2"}
+  - {symbol: "l_i^0", code_name: rest_length, meaning: "缆段无应变长度", unit: m, shape: "N-1"}
+  - {symbol: "T_i", code_name: tension, meaning: "缆段轴向张力", unit: N, shape: "N-1", domain: "T_i >= 0"}
+parameters:
+  - {symbol: "theta_out", value: 37.5, unit: deg, source: "任务书增加内容 01"}
+  - {symbol: "D_0.52", value: 0.00052, unit: m, source: "任务书第三节"}
+  - {symbol: "m_0.52", value: "0.00021 +/- 0.00003", unit: "kg/m", source: "任务书第三节"}
+  - {symbol: "R_dynamic", value: "15D", unit: m, source: "任务书第三节"}
+  - {symbol: "R_low_load", value: "10D", unit: m, source: "任务书第三节"}
+  - {symbol: "U", value: [-0.20, -0.10, 0.0, 0.10, 0.20], unit: "m/s", source: "任务书增加内容 04"}
+  - {symbol: "MBL", value: 500, unit: N, source: "任务书第三节"}
+  - {symbol: "rho_water", value: 1000, unit: "kg/m^3", source: "任务书第三节（水池淡水）"}
+equations:
+  - id: eq_outlet
+    expression: "d_out=[-cos(37.5 deg),-sin(37.5 deg)]"
+    applies_to: [q2, q5]
+  - id: eq_stretch
+    expression: "epsilon_i=(l_i-l_i^0)/l_i^0; N_i=EA*epsilon_i in tension and 0.10EA*epsilon_i in compression; reported T_i=max(N_i,0)"
+    applies_to: [q2, q3, q4, q5]
+  - id: eq_bending
+    expression: "E_b=sum_i 0.5*EI*theta_i^2/h_i; F_b=-dE_b/dr"
+    applies_to: [q2]
+  - id: eq_drag
+    expression: "F_D=0.5*rho*C_D*D*l*|u_water-v|*(u_water-v), decomposed into normal/tangential components"
+    applies_to: [q4, q5]
+  - id: eq_length
+    expression: "sum(l_i^0)=h_A+initial_extra_length+integral(v_out dt)"
+    applies_to: [q3]
+objective_functions: []
+constraints:
+  - {id: c_outlet, expression: "maximum outlet direction error <= 1e-6 deg"}
+  - {id: c_length, expression: "maximum rest-length conservation error <= 1e-9 m"}
+  - {id: c_finite, expression: "NaN/Inf count = 0"}
+  - {id: c_bend, expression: "minimum resolved bend radius >= 15D; additionally report 10D reference"}
+  - {id: c_tension, expression: "maximum active tension < configured allowable tension and break force"}
+  - {id: c_contact, expression: "maximum seabed penetration <= 0.001 m"}
+  - {id: c_mesh, expression: "minimum geometric/rest-length ratio >= 0.90 after remeshing"}
+  - {id: c_insertion, expression: "insertion conserves rest length and has no unresolved tail shorter than 0.5 target ds"}
+  - {id: c_curve, expression: "maximum instantaneous insertion tension jump <= 0.001 N and maximum adjacent step of the reported 0.5 s engineering trend <= 0.0001 N; raw peaks remain the safety basis"}
+initial_conditions:
+  - "锚点位于海床，AUV 导缆点位于局部海床上方 h_A；初始缆形与出口方向相容。"
+boundary_conditions:
+  - "节点0固定；末节点跟随 AUV；倒数第二节点限制在 37.5°出口射线上。"
+solver:
+  method: "二维集中质量法 + 能量型离散弯曲杆 + 稀疏线性隐式 Euler"
+  initialization: "边界相容曲线并阻尼松弛"
+  stopping_rule: "到达 t_end；遇到非有限数、500 N破断力或不可恢复几何失败时终止；工作张力、弯曲、穿透、网格和曲线门禁在工况结束时统一判定"
+  tolerance: 1.0e-9
+  random_seed: 42
+validation:
+  - {check: "弯曲力有限差分梯度相对误差", acceptance: "<= 1e-5"}
+  - {check: "弯曲合力和合力矩", acceptance: "绝对值 <= 1e-10"}
+  - {check: "10/5/2/1 mm 收敛", acceptance: "最后两档 Layback/悬空长度相对差 <= 5%，弯曲半径相对差 <= 10%；近零张力允许绝对差 <= 允许张力的1%"}
+  - {check: "五档均匀流", acceptance: "全部工况满足 c_outlet,c_length,c_finite,c_bend,c_tension,c_contact,c_mesh"}
+  - {check: "任务书60工况", acceptance: "4×3×5=60个唯一组合均计算至12 s，并全部通过八项门禁"}
+  - {check: "GIF 多帧审计", acceptance: "时间单调、节点数非减、锚点固定、AUV轨迹正确、出口误差达标、无海床穿透或自交"}
+required_outputs:
+  tables:
+    - "results/buoyancy_matrix.csv"
+    - "results/bending_validation.csv"
+    - "results/convergence_results.csv"
+    - "results/insertion_audit.csv"
+    - "results/current_sweep.csv"
+    - "results/metrics.json"
+    - "results/sweep_60_metrics.json"
+    - "outputs/sweep_60_freshwater/sweep_summary.csv"
+  figures:
+    - "figures/result_q1_buoyancy.svg"
+    - "figures/result_q2_convergence.svg"
+    - "figures/result_q3_insertion.svg"
+    - "figures/result_q4_current_response.svg"
+    - "figures/result_q5_final_shape.svg"
+  analysis: "results/结果分析.md"
+implementation_assumptions:
+  - assumption: "任务书增加内容覆盖原 20--50 mm 粗网格和 30 mm 弯曲半径建议。"
+    impact: "允许 1--50 mm 网格，并以 15D/10D 作为动态/低载参考。"
+  - assumption: "0.52 mm 的 EA、EI、CD、CA 尚无产品级规格书，保留为显式可配置的 provisional 参数，结论仅属于数值验证。"
+    impact: "不声称工程认证；结果报告必须标注参数来源等级。"
+  - assumption: "任务书给出的 500 N 作为最低破断力，工作允许张力按安全系数 3 取 166.667 N。"
+    impact: "原配置的 2 N 临时阈值被替换；原始未滤波峰值用于安全判定。"
+  - assumption: "均匀流实验只在代表工况上运行，不扩展原 60 工况矩阵。"
+    impact: "符合任务书增加内容 04，控制计算量。"
+  - assumption: "初始时锚点位于 AUV 正下方而出口方向非竖直，因此预置 0.02 m 额外缆长以构造无初始拉伸的边界相容曲线。"
+    impact: "长度守恒基准改为 h_A+0.02 m，避免用初始弹性拉伸强行满足 37.5°边界。"
+  - assumption: "离散杆边使用 10% EA 的压缩正则化保持材料弧长；这是 1 mm 网格稳定性对照得到的最低可行值，宏观受压仍通过弯曲屈曲释放，安全张力只统计正轴力。"
+    impact: "防止只受拉弹簧在松缆时数值塌缩成短直弦，使动画和曲率具有物理意义。"
+unresolved_items: []
