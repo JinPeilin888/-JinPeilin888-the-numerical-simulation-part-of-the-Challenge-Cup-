@@ -21,7 +21,7 @@ python scripts/run_case.py --config configs/cable_1p0mm.yaml --case-id cable_1p0
 
 ##### 2、得到1mm标准工况的动图
 ```bash
-python scripts/make_animation.py "outputs_1p0mm/1mm_standard_case/node_snapshots.npz" --output "outputs_1p0mm/1mm_standard_case/animation_8m.gif" --fps 10
+python scripts/make_animation.py "outputs/1mm_standard_case/node_snapshots.npz" --output "outputs/1mm_standard_case/animation_8m.gif" --fps 10
 ```
 
 ##### 3、跑1mm缆5种水平流速
@@ -130,3 +130,15 @@ for row in rows:
     )
 '@ | python -
 ```
+##### 6、运行额外增加的正负0.1流速
+```bash
+python scripts/run_current_sweep.py --config configs/cable_0p52mm.yaml --output-root outputs/current_sweep_pm0p1_12s --velocity -0.1 0.1
+```
+
+额外要求如下：
+* 1,60个工况可以只跑12秒，但是必须在结果中包含time_history.csv
+```text
+这些工况的话可以挑一些代表性（各10个吧）的记录成一个excel表做成附件。这个excel表里面的张力-时间曲线也可以用表格数值来表示。用time_history.csv来制作excel表
+```
+* 2,60个工况必须跑水平流速(但是可以只包括正负0.1）
+* 3,跑1mm标准工况(包括生成动图所需的.npz文件、time_history.csv用于生成图表的)

@@ -1,16 +1,10 @@
 ### 跑0.52mm缆要求
-总要求如下：
-* 1,60个工况可以只跑12秒，但是必须在结果中包含time_history.csv
-```text
-这些工况的话可以挑一些代表性（各10个吧）的记录成一个excel表做成附件。这个excel表里面的张力-时间曲线也可以用表格数值来表示。用time_history.csv来制作excel表
-```
-* 2,60个工况必须跑水平流速(但是可以只包括正负0.1）
 
 
 #### 跑0.52mm缆标准工况下8m的路程
-##### 1、运行1mm标准工况
+##### 1、运行0.52mm标准工况
 ```bash
-python scripts/run_case.py --config configs/cable_1p0mm.yaml --case-id cable_1p0mm_standard_8m --v-A 0.20 --h-A 0.50 --v-out 0.21 --t-end 40 --output-root outputs_1p0mm/1mm_standard_case
+python scripts/run_case.py --config configs/cable_0p52mm.yaml --case-id cable_0p52mm_standard_8m --v-A 0.20 --h-A 0.50 --v-out 0.21 --t-end 40 --output-root outputs_0p52mm/0p52mm_standard_case
 ```
 这一步可以得到：
 * time_history.csv
@@ -27,23 +21,23 @@ python scripts/run_case.py --config configs/cable_1p0mm.yaml --case-id cable_1p0
 * resolved_config.json
 读者可以自行修改outputs后的输出目录
 
-##### 2、得到1mm标准工况的动图
+##### 2、得到0.52mm标准工况的动图
 ```bash
-python scripts/make_animation.py "outputs_1p0mm/1mm_standard_case/node_snapshots.npz" --output "outputs_1p0mm/1mm_standard_case/animation_8m.gif" --fps 10
+python scripts/make_animation.py "outputs/0p52mm_standard_case/node_snapshots.npz" --output "outputs/0p52mm_standard_case/animation_8m.gif" --fps 10
 ```
 
-##### 3、跑1mm缆5种水平流速
+##### 3、跑0.52mm缆5种水平流速
 ```bash
-python scripts/run_current_sweep.py --config configs/cable_1p0mm.yaml --output-root outputs_1p0mm/current_sweep_1mm --t-end 41
+python scripts/run_current_sweep.py --config configs/cable_0p52mm.yaml --output-root outputs_0p52mm/current_sweep_0p52mm --t-end 41
 ```
-注意：这里最好把cable_1p00m.yaml配置文件里的v_out放缆比改成0.21
+注意：这里最好把cable_0p52m.yaml配置文件里的v_out放缆比改成0.21
 
 ##### 4、跑60工况（结果需要有time_history.csv，resolved_config.json,summary.json,insertion_events.csv，请读者自查)
 其中time_history.csv可以生成需要的相关时间曲线等 
 
 建议租服务器跑
 ```bash
-python3 scripts/run_sweep.py --config configs/cable_1p0mm.yaml --workers 15 --resume --output-root outputs/sweep_60_freshwater_1p0mm
+python3 scripts/run_sweep.py --config configs/cable_0p52mm.yaml --workers 15 --resume --output-root outputs/sweep_60_freshwater
 ```
 
 ##### 5、跑60工况（敏感性分析）
@@ -61,14 +55,14 @@ from pathlib import Path
 from src.config import load_config
 from src.simulation import run_simulation
 
-# 加载1 mm缆配置
-base = load_config(Path("configs/cable_1p0mm.yaml"))
+# 加载0.52 mm缆配置
+base = load_config(Path("configs/cable_0p52mm.yaml"))
 
 # 与原收敛表保持相同工况：AUV速度和放缆速度均为0.21 m/s
 base = base.with_overrides(v_out=0.21)
 
-output_root = Path("outputs/final_validation_1p0mm/convergence")
-result_file = Path("results/convergence_results_1p0mm.csv")
+output_root = Path("outputs/final_validation_0p52mm/convergence")
+result_file = Path("results/convergence_results_0p52mm.csv")
 #output_root → 7个算例各自的详细结果文件夹
  result_file → 7个算例合并后的总表
 
@@ -138,3 +132,16 @@ for row in rows:
     )
 '@ | python -
 ```
+##### 6、运行额外增加的正负0.1流速
+```bash
+python scripts/run_current_sweep.py --config configs/cable_0p52mm.yaml --output-root outputs/current_sweep_pm0p1_12s --velocity -0.1 0.1
+```
+
+
+额外要求如下：
+* 1,60个工况可以只跑12秒，但是必须在结果中包含time_history.csv
+```text
+这些工况的话可以挑一些代表性（各10个吧）的记录成一个excel表做成附件。这个excel表里面的张力-时间曲线也可以用表格数值来表示。用time_history.csv来制作excel表
+```
+* 2,60个工况必须跑水平流速(但是可以只包括正负0.1）
+* 3,跑0.52mm标准工况(包括生成动图所需的.npz文件、time_history.csv用于生成图表的)
