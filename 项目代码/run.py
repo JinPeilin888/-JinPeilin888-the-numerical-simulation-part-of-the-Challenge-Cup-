@@ -284,8 +284,8 @@ def run_current_sweep(base: SimulationConfig) -> list[dict[str, Any]]:
             relaxation_time=0.30,
             ds=0.01,
             dt=0.00025,
-            save_plots=False,
-            save_snapshots=False,
+            save_plots=True,
+            save_snapshots=True,
         )
         cfg.validate()
         summary = run_simulation(cfg, raise_on_error=False)

@@ -66,7 +66,7 @@ def _case_config(
         "h_A": h_a,
         "v_out": v_a * ratio,
         "output_root": output_root,
-        "save_history": False,
+        "save_history": True,
         "save_plots": False,
         "save_snapshots": False,
     }
