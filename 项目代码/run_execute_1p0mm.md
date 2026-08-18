@@ -26,9 +26,9 @@ python scripts/make_animation.py "outputs/1mm_standard_case/node_snapshots.npz" 
 
 ##### 3、跑1mm缆5种水平流速
 ```bash
-python scripts/run_current_sweep.py --config configs/cable_1p0mm.yaml --output-root outputs_1p0mm/current_sweep_1mm --t-end 41
+python scripts/run_current_sweep.py --config configs/cable_1p0mm.yaml --output-root outputs_1p0mm/current_sweep_1mm --t-end 40
 ```
-注意：这里最好把cable_1p00m.yaml配置文件里的v_out放缆比改成0.21
+注意：这里最好把cable_1p0mm.yaml配置文件里的v_out放缆比改成0.21
 
 ##### 4、跑60工况（结果需要有time_history.csv，resolved_config.json,summary.json,insertion_events.csv，请读者自查)
 其中time_history.csv可以生成需要的相关时间曲线等 
@@ -132,7 +132,7 @@ for row in rows:
 ```
 ##### 6、运行额外增加的正负0.1流速
 ```bash
-python scripts/run_current_sweep.py --config configs/cable_0p52mm.yaml --output-root outputs/current_sweep_pm0p1_12s --velocity -0.1 0.1
+python scripts/run_current_sweep.py --config configs/cable_1p0mm.yaml --cases configs/cases.csv --output-root outputs/current_sweep_pm0p1_12s --velocity -0.1 0.1
 ```
 
 额外要求如下：
