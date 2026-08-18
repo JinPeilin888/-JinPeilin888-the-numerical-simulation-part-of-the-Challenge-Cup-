@@ -36,6 +36,7 @@ def _tag(value: float) -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run the five prescribed uniform-current cases.")
+    parser.add_argument("--velocity",type=float,nargs="+",default=None,help="Current velocities in m/s, e.g. --velocities -0.1 0.1")
     parser.add_argument("--config", default="configs/cable_0p52mm.yaml")
     parser.add_argument("--output-root", default="outputs/current_sweep")
     parser.add_argument("--t-end", type=float, default=None)
@@ -48,7 +49,8 @@ def main() -> None:
     config_path = Path(args.config)
     base = load_config(config_path)
     rows: list[dict[str, object]] = []
-    for velocity in _read_velocities(config_path):
+    velocities = args.velocities if args.velocities is not None else _read_velocities(config_path)
+    for velocity in velocities:
         overrides: dict[str, object] = {
             "case_id": f"current_{_tag(velocity)}",
             "output_root": args.output_root,
