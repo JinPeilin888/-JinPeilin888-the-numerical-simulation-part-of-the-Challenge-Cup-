@@ -176,7 +176,7 @@ def main() -> None:
     cfg = load_config(cfg_path)
     _refresh_summary_table(
         PROJECT_ROOT / "outputs" / "final_validation" / "convergence",
-        RESULTS / "convergence_results.csv",
+        RESULTS / "convergence_result_0p52mm.csv",
     )
     _refresh_summary_table(
         PROJECT_ROOT / "outputs" / "final_validation" / "current_sweep",

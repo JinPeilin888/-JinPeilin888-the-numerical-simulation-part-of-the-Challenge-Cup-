@@ -26,33 +26,11 @@
 安全判定始终使用未滤波原始张力。`max_tension.png` 和 `tail_tension.png` 显示中值去脉冲后的 0.5 s 工程趋势；对应的 `*_raw.png` 与 CSV 保留全部原始峰值，避免用绘图平滑掩盖安全风险。
 
 ## 3. 快速运行
-
-```bash
-cd tiaozhanbei_cable_project-main
-source .venv/bin/activate
-
-# 单工况（默认 0.52 mm 正式配置）
-python scripts/run_case.py --case-id demo
-
-# 完整数值验证、五档均匀流和 GIF
-python run.py
-
-# 任务书规定的 60 工况，默认 4 进程
-python scripts/run_sweep.py --workers 4
-
-# 单元测试
-pytest -q
+```text
+项目运行直接参考相关参数设置以及说明目录下的run_execute_*.md
 ```
 
-单工况常用输入：
-
-```bash
-python scripts/run_case.py \
-  --v-A 0.25 --h-A 0.50 --v-out 0.275 \
-  --t-end 12 --case-id VA_0p25_H_0p50_R_1p10
-```
-
-地形、流速、缆参数和数值参数统一在 `configs/cable_0p52mm.yaml` 中修改；代码内没有另一套覆盖值。
+地形、流速、缆参数和数值参数统一在 `configs/cable_*mm.yaml` 中修改；代码内没有另一套覆盖值。
 
 ## 4. 60 工况矩阵
 
@@ -64,28 +42,18 @@ python scripts/run_case.py \
 
 总数为 `4 × 3 × 5 = 60`。批算输出 `sweep_summary.csv/json`、`sweep_validation.json` 和四张对比图；若任一工况的数值、力学、网格或曲线门禁失败，命令返回非零状态。
 
-## 5. 当前完整验证结果
-
-- 单元测试：46 项全部通过；
-- 10/5/2/1 mm 网格与时间步收敛：全部算例安全，2 mm 与 1 mm 的弯曲半径相对差 `1.466%`；
-- 五档均匀流 `U=-0.20,-0.10,0,+0.10,+0.20 m/s`：5/5 通过；
-- 8 s 上公差线密度触底代表工况：原始峰值张力 `0.008691 N`，最小弯曲半径 `45.824 mm`，首次触底 `2.11075 s`；
-- GIF：`800×450`、161 帧、0–8 s；锚点、AUV 轨迹、出口方向、长度守恒、穿透、自交、帧连续性和弯曲半径检查全部通过。
-
-截至 2026-08-16 的阶段性正式批算完成 `18/60` 个全时长 12 s 工况，`18/18` 全部通过八项门禁；剩余 42 个可使用 `--resume` 断点续跑。该状态不能表述为“60 工况已经全部验收”。详见 `results/阶段性汇报_18工况.md`。
-
-名义线密度 `0.21 g/m` 在淡水中略微正浮，因此可能在给定时间内没有新增着底点；动画使用任务书公差内的 `0.24 g/m` 上限线密度展示真实触底过程，并在 case_id 中明确标注。
+## 5. 当前结果
+还未完成
 
 ## 6. 主要输出
-
-- `outputs/final_validation/final_0p52mm_freshwater_upper_mass/`：代表工况 CSV、原始/趋势曲线、最终缆形和快照；
-- `outputs/final_validation/demo_animation.gif`：最终动态图；
-- `outputs/sweep_60_freshwater/`：正式 60 工况结果；
-- `results/metrics.json`：总体验收指标；
-- `results/animation_audit.json`：GIF 逐帧审计；
-- `results/convergence_results.csv`：网格/时间收敛；
-- `results/current_sweep.csv`：五档均匀流结果。
+```text
+见相关参数设置以及说明目录下的run_execute_*.md
+```
 
 ## 7. 适用范围
-
 `EA`、`EI`、阻力系数和摩擦系数仍是可配置的工程暂定值，需由厂家规格或试验标定后才能用于产品认证。本模型为二维模型，不表示扭转、三维自接触、打结和光学衰减；这些现象需要完整三维离散杆或梁模型。
+
+## 8. 项目未来展望
+* 可能会添加不同海床地形
+* 可能会增加三维仿真
+* 若有建议可在issues里提，欢迎各位给出宝贵建议
