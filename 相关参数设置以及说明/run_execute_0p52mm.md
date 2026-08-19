@@ -23,12 +23,12 @@ python scripts/run_case.py --config configs/cable_0p52mm.yaml --case-id cable_0p
 
 ##### 2、得到0.52mm标准工况的动图
 ```bash
-python scripts/make_animation.py "outputs/0p52mm_standard_case/node_snapshots.npz" --output "outputs/0p52mm_standard_case/animation_8m.gif" --fps 10
+python scripts/make_animation.py "outputs_0p52mm/0p52mm_standard_case/cable_0p52mm_standard_8m/node_snapshots.npz" --output "outputs_0p52mm/0p52mm_standard_case/cable_0p52mm_standard_8m/animation_8m.gif" --fps 10
 ```
 
 ##### 3、跑0.52mm缆5种水平流速
 ```bash
-python scripts/run_current_sweep.py --config configs/cable_0p52mm.yaml --output-root outputs_0p52mm/current_sweep_0p52mm --t-end 40
+python scripts/run_current_sweep_single.py --config configs/cable_0p52mm.yaml --output-root outputs_0p52mm/current_sweep_0p52mm --t-end 40
 ```
 注意：这里最好把cable_0p52m.yaml配置文件里的v_out放缆比改成0.21
 

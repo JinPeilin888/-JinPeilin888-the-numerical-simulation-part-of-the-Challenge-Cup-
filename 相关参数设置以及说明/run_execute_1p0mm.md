@@ -21,12 +21,12 @@ python scripts/run_case.py --config configs/cable_1p0mm.yaml --case-id cable_1p0
 
 ##### 2、得到1mm标准工况的动图
 ```bash
-python scripts/make_animation.py "outputs/1mm_standard_case/node_snapshots.npz" --output "outputs/1mm_standard_case/animation_8m.gif" --fps 10
+python scripts/make_animation.py "outputs_1p0mm/1mm_standard_case/cable_1p0mm_standard_8m/node_snapshots.npz" --output "outputs_1p0mm/1mm_standard_case/cable_1p0mm_standard_8m/animation_8m.gif" --fps 10
 ```
 
 ##### 3、跑1mm缆5种水平流速
 ```bash
-python scripts/run_current_sweep.py --config configs/cable_1p0mm.yaml --output-root outputs_1p0mm/current_sweep_1mm --t-end 40
+python scripts/run_current_sweep_single.py --config configs/cable_1p0mm.yaml --output-root outputs_1p0mm/current_sweep_1mm --t-end 40
 ```
 注意：这里最好把cable_1p0mm.yaml配置文件里的v_out放缆比改成0.21
 
