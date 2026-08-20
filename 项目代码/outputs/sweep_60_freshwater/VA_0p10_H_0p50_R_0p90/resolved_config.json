@@ -3,7 +3,7 @@
   "v_A": 0.1,
   "h_A": 0.5,
   "v_out": 0.09000000000000001,
-  "t_end": 40.0,
+  "t_end": 12.0,
   "dt": 0.00025,
   "ramp_time": 2.0,
   "initial_extra_length": 0.02,
