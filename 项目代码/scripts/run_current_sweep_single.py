@@ -59,7 +59,7 @@ def main() -> None:
     # 只采用标准工况，不再读取 cases.csv
     standard_v_a = 0.20
     standard_h_a = 0.50
-    standard_v_out = 0.20
+    standard_v_out = 0.21
     standard_ratio = standard_v_out / standard_v_a
 
     velocities = (
