@@ -132,7 +132,7 @@ for row in rows:
 ```
 ##### 6、运行额外增加的正负0.1流速
 ```bash
-python scripts/run_current_sweep.py --config configs/cable_1p0mm.yaml --cases configs/cases.csv --output-root outputs/current_sweep_pm0p1_12s --velocity -0.1 0.1
+python scripts/run_current_sweep.py --config configs/cable_1p0mm.yaml --cases configs/cases.csv --output-root outputs/current_sweep_pm0p1_12s_0p1 --velocity -0.1 0.1
 ```
 
 额外要求如下：

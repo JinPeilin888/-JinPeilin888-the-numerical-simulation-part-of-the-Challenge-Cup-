@@ -4,6 +4,7 @@ import argparse
 import csv
 from pathlib import Path
 import sys
+import json
 
 import yaml
 
@@ -33,6 +34,33 @@ def _tag(value: float) -> str:
     sign = "p" if value >= 0.0 else "m"
     return f"{sign}{abs(value):.2f}".replace(".", "p")
 
+def _load_completed(
+    output_root: str,
+    case_id: str,
+    expected_config: dict[str, object],
+) -> dict[str, object] | None:
+    case_dir = Path(output_root) / case_id
+    summary_path = case_dir / "summary.json"
+    resolved_path = case_dir / "resolved_config.json"
+
+    if not summary_path.exists() or not resolved_path.exists():
+        return None
+
+    try:
+        summary = json.loads(summary_path.read_text(encoding="utf-8"))
+        resolved = json.loads(resolved_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+
+    if not isinstance(summary, dict):
+        return None
+    if summary.get("case_id") != case_id:
+        return None
+    if resolved != expected_config:
+        return None
+
+    return summary
+
 
 def main() -> None:
     parser = argparse.ArgumentParser(
@@ -44,6 +72,11 @@ def main() -> None:
         nargs="+",
         default=None,
         help="Current velocities in m/s, e.g. --velocity -0.1 0.1",
+    )
+    parser.add_argument(
+        "--resume",
+        action="store_true",
+        help="跳过配置完全一致且已有完整 summary.json 的工况",
     )
     parser.add_argument("--config", default="configs/cable_0p52mm.yaml")
     parser.add_argument("--cases", default="configs/cases.csv")
@@ -124,15 +157,30 @@ def main() -> None:
             cfg = base.with_overrides(**overrides)
             cfg.validate()
 
-            print(
-                f"[{completed}/{total_cases}] "
-                f"{case_id}: U={velocity:+.2f} m/s"
-            )
+            summary = None
 
-            summary = run_simulation(
-                cfg,
-                raise_on_error=False,
-            )
+            if args.resume:
+                summary = _load_completed(
+                    args.output_root,
+                    case_id,
+                    cfg.to_dict(),
+                )
+
+            if summary is not None:
+                print(
+                    f"[{completed}/{total_cases}] resumed "
+                    f"{case_id}: {summary.get('classification')}"
+                )
+            else:
+                print(
+                    f"[{completed}/{total_cases}] "
+                    f"{case_id}: U={velocity:+.2f} m/s"
+                )
+
+                summary = run_simulation(
+                    cfg,
+                    raise_on_error=False,
+                )
 
             summary.update(
                 {

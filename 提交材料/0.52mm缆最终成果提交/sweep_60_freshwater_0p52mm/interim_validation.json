@@ -1,0 +1,90 @@
+{
+  "report_status": "interim_not_full_60_case_acceptance",
+  "expected_case_count": 60,
+  "completed_case_count": 18,
+  "pending_case_count": 42,
+  "unique_case_count": 18,
+  "unique_parameter_triple_count": 18,
+  "t_end_values_s": [
+    12.0
+  ],
+  "completed_all_constraints_passed": true,
+  "failed_completed_case_ids": [],
+  "pending_case_ids": [
+    "VA_0p20_H_0p30_R_1p10",
+    "VA_0p20_H_0p30_R_1p20",
+    "VA_0p20_H_0p50_R_0p90",
+    "VA_0p20_H_0p50_R_1p00",
+    "VA_0p20_H_0p50_R_1p05",
+    "VA_0p20_H_0p50_R_1p10",
+    "VA_0p20_H_0p50_R_1p20",
+    "VA_0p20_H_1p00_R_0p90",
+    "VA_0p20_H_1p00_R_1p00",
+    "VA_0p20_H_1p00_R_1p05",
+    "VA_0p20_H_1p00_R_1p10",
+    "VA_0p20_H_1p00_R_1p20",
+    "VA_0p25_H_0p30_R_0p90",
+    "VA_0p25_H_0p30_R_1p00",
+    "VA_0p25_H_0p30_R_1p05",
+    "VA_0p25_H_0p30_R_1p10",
+    "VA_0p25_H_0p30_R_1p20",
+    "VA_0p25_H_0p50_R_0p90",
+    "VA_0p25_H_0p50_R_1p00",
+    "VA_0p25_H_0p50_R_1p05",
+    "VA_0p25_H_0p50_R_1p10",
+    "VA_0p25_H_0p50_R_1p20",
+    "VA_0p25_H_1p00_R_0p90",
+    "VA_0p25_H_1p00_R_1p00",
+    "VA_0p25_H_1p00_R_1p05",
+    "VA_0p25_H_1p00_R_1p10",
+    "VA_0p25_H_1p00_R_1p20",
+    "VA_0p30_H_0p30_R_0p90",
+    "VA_0p30_H_0p30_R_1p00",
+    "VA_0p30_H_0p30_R_1p05",
+    "VA_0p30_H_0p30_R_1p10",
+    "VA_0p30_H_0p30_R_1p20",
+    "VA_0p30_H_0p50_R_0p90",
+    "VA_0p30_H_0p50_R_1p00",
+    "VA_0p30_H_0p50_R_1p05",
+    "VA_0p30_H_0p50_R_1p10",
+    "VA_0p30_H_0p50_R_1p20",
+    "VA_0p30_H_1p00_R_0p90",
+    "VA_0p30_H_1p00_R_1p00",
+    "VA_0p30_H_1p00_R_1p05",
+    "VA_0p30_H_1p00_R_1p10",
+    "VA_0p30_H_1p00_R_1p20"
+  ],
+  "maximum_peak_active_tension": {
+    "value": 0.008026192725451393,
+    "case_id": "VA_0p20_H_0p30_R_0p90"
+  },
+  "minimum_bend_radius": {
+    "value": 0.038744233180339094,
+    "case_id": "VA_0p20_H_0p30_R_0p90"
+  },
+  "maximum_penetration": {
+    "value": 0.0,
+    "case_id": "VA_0p10_H_0p30_R_0p90"
+  },
+  "maximum_outlet_error_deg": {
+    "value": 0.0,
+    "case_id": "VA_0p10_H_0p30_R_0p90"
+  },
+  "maximum_length_error": {
+    "value": 1.8109957977685553e-12,
+    "case_id": "VA_0p20_H_0p30_R_1p05"
+  },
+  "minimum_mesh_ratio": {
+    "value": 0.9998682360713083,
+    "case_id": "VA_0p20_H_0p30_R_1p05"
+  },
+  "maximum_insertion_jump": {
+    "value": 0.0,
+    "case_id": "VA_0p10_H_0p30_R_0p90"
+  },
+  "maximum_filtered_step": {
+    "value": 1.015861781527124e-06,
+    "case_id": "VA_0p10_H_1p00_R_0p90"
+  },
+  "pytest_passed": 46
+}
