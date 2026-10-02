@@ -284,8 +284,8 @@ def run_current_sweep(base: SimulationConfig) -> list[dict[str, Any]]:
             relaxation_time=0.30,
             ds=0.01,
             dt=0.00025,
-            save_plots=False,
-            save_snapshots=False,
+            save_plots=True,
+            save_snapshots=True,
         )
         cfg.validate()
         summary = run_simulation(cfg, raise_on_error=False)
@@ -641,7 +641,7 @@ def run_full() -> int:
         raise RuntimeError("Bending validation failed")
 
     convergence, convergence_metrics = run_convergence(base)
-    _write_csv(RESULTS / "convergence_results.csv", convergence)
+    _write_csv(RESULTS / "convergence_result_0p52mm.csv", convergence)
     if not convergence_metrics["passed"]:
         raise RuntimeError(f"Convergence validation failed: {convergence_metrics}")
 
@@ -730,7 +730,7 @@ def run_full() -> int:
         RESULTS / "metrics.json",
         RESULTS / "结果分析.md",
         RESULTS / "current_sweep.csv",
-        RESULTS / "convergence_results.csv",
+        RESULTS / "convergence_result_0p52mm.csv",
         RESULTS / "animation_audit.json",
         FIGURES / "result_q1_buoyancy.svg",
         FIGURES / "result_q2_convergence.svg",

@@ -6,7 +6,7 @@ source_priority:
   - "本轮用户要求（按顺序修改、实验验证并满足全部约束）"
   - "MGC-01-1.0-ETFE水下柔性光缆铺放仿真任务书.docx"
   - "现有项目代码与 README"
-  - "旧计划书 docs/鎬濊矾鏂囦欢.md"
+  - "旧计划书 docs/项目设计思路.md"
 source_files:
   - path: "/Users/gerrilynn/Desktop/CUMCM/金沛霖—仿真任务/MGC-01-1.0-ETFE水下柔性光缆铺放仿真任务书.docx"
     role: "任务书与验收约束来源"
@@ -18,7 +18,7 @@ questions:
   - id: q2
     objective: "验证 37.5°持续出口约束、能量型弯曲力、毫米级网格和分区弯曲半径。"
     inputs: ["动态模型", "ds=10/5/2/1 mm", "同步时间步"]
-    outputs: ["results/convergence_results.csv", "results/bending_validation.csv"]
+    outputs: ["results/convergence_result_0p52mm.csv", "results/bending_validation.csv"]
   - id: q3
     objective: "验证动态放缆的长度/质量/浮力守恒、插入连续性和重划分过程不制造伪峰值。"
     inputs: ["节点状态", "放缆速度", "目标单元长度"]
@@ -96,7 +96,7 @@ required_outputs:
   tables:
     - "results/buoyancy_matrix.csv"
     - "results/bending_validation.csv"
-    - "results/convergence_results.csv"
+    - "results/convergence_result_0p52mm.csv"
     - "results/insertion_audit.csv"
     - "results/current_sweep.csv"
     - "results/metrics.json"

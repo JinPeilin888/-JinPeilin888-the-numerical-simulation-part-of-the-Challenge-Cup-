@@ -15,8 +15,8 @@ case:
   case_id: cable_1p0mm_demo
   v_A: 0.20
   h_A: 0.50
-  v_out: 0.20
-  t_end: 12.0
+  v_out: 0.21
+  t_end: 40.0
   dt: 0.00025
   ramp_time: 2.0
   initial_extra_length: 0.02

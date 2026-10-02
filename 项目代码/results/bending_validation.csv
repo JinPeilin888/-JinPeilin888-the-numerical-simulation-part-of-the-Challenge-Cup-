@@ -1,8 +1,0 @@
-test,value,acceptance,passed,ds_m
-energy_gradient,2.1848453762065825e-10,1e-05,True,
-net_force,3.1031676915590914e-17,1e-10,True,
-net_torque,2.7755575615628914e-17,1e-10,True,
-constant_curvature_circle,1.908195823574488e-15,1e-10,True,0.01
-constant_curvature_circle,3.816391647148976e-15,1e-10,True,0.005
-constant_curvature_circle,1.0928757898653885e-14,1e-10,True,0.002
-constant_curvature_circle,5.152128723651117e-14,1e-10,True,0.001
